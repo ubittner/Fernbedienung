@@ -1,0 +1,12 @@
+{
+    "id": "{B98CAD42-EF00-5277-BB1C-0760EA2AD0C4}",
+    "name": "Fernbedienung",
+    "author": "Ulrich Bittner",
+    "url": "https://github.com/ubittner/Fernbedienung",
+    "compatibility": {
+        "version": "6.1"
+    },
+    "version": "7.0",
+    "build": 1,
+    "date": 1662617816
+}
