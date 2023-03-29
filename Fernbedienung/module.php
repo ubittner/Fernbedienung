@@ -39,6 +39,7 @@ class Fernbedienung extends IPSModule
         $this->RegisterPropertyBoolean('EnableActive', false);
         $this->RegisterPropertyString('TriggerList', '[]');
         $this->RegisterPropertyInteger('AlarmProtocol', 0);
+        $this->RegisterPropertyString('Location', '');
 
         ########## Variables
 
@@ -261,7 +262,12 @@ class Fernbedienung extends IPSModule
                                 if ($variable['UseAlarmProtocol']) {
                                     $id = $this->ReadPropertyInteger('AlarmProtocol');
                                     if ($id != 0 && @IPS_ObjectExists($id)) {
-                                        $eventMessage = date('d.m.Y, H:i:s') . ', ' . $variable['Designation'] . ' hat ausgelöst. (ID ' . $SenderID . ')';
+                                        $location = $this->ReadPropertyString('Location');
+                                        if ($location == '') {
+                                            $eventMessage = date('d.m.Y, H:i:s') . ', ' . $variable['Designation'] . ' hat ausgelöst. (ID ' . $SenderID . ')';
+                                        } else {
+                                            $eventMessage = date('d.m.Y, H:i:s') . ', ' . $this->ReadPropertyString('Location') . ', Fernbedienung, ' . $variable['Designation'] . ' hat ausgelöst. (ID ' . $SenderID . ')';
+                                        }
                                         $this->SendDebug(__FUNCTION__, 'Alarmprotokoll: ' . $eventMessage, 0);
                                         @AP_UpdateMessages($id, $eventMessage, 0);
                                     }
