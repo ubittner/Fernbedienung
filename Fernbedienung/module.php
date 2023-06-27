@@ -23,9 +23,9 @@ class Fernbedienung extends IPSModule
     use FB_Config;
 
     //Constants
-    private const MODULE_NAME = 'Fernbedienung';
+    private const LIBRARY_GUID = '{B98CAD42-EF00-5277-BB1C-0760EA2AD0C4}';
+    private const MODULE_GUID = '{73F6BEB3-115F-4018-A1D3-C6C16B939986}';
     private const MODULE_PREFIX = 'FB';
-    private const MODULE_VERSION = '7.0-1, 08.09.2022';
     private const ALARMPROTOCOL_MODULE_GUID = '{66BDB59B-E80F-E837-6640-005C32D5FC24}';
 
     public function Create()
@@ -91,7 +91,7 @@ class Fernbedienung extends IPSModule
                 if (array_key_exists(0, $primaryCondition)) {
                     if (array_key_exists(0, $primaryCondition[0]['rules']['variable'])) {
                         $id = $primaryCondition[0]['rules']['variable'][0]['variableID'];
-                        if ($id > 1 && @IPS_ObjectExists($id)) { //0 = main category, 1 = none
+                        if ($id > 1 && @IPS_ObjectExists($id)) {
                             $this->RegisterReference($id);
                             $this->RegisterMessage($id, VM_UPDATE);
                         }
@@ -107,7 +107,7 @@ class Fernbedienung extends IPSModule
                         foreach ($rules as $rule) {
                             if (array_key_exists('variableID', $rule)) {
                                 $id = $rule['variableID'];
-                                if ($id > 1 && @IPS_ObjectExists($id)) { //0 = main category, 1 = none
+                                if ($id > 1 && @IPS_ObjectExists($id)) {
                                     $this->RegisterReference($id);
                                 }
                             }
@@ -121,7 +121,7 @@ class Fernbedienung extends IPSModule
                 if (array_key_exists('parameters', $action)) {
                     if (array_key_exists('TARGET', $action['parameters'])) {
                         $id = $action['parameters']['TARGET'];
-                        if ($id > 1 && @IPS_ObjectExists($id)) { //0 = main category, 1 = none
+                        if ($id > 1 && @IPS_ObjectExists($id)) {
                             $this->RegisterReference($id);
                         }
                     }
@@ -172,10 +172,18 @@ class Fernbedienung extends IPSModule
         $id = @IPS_CreateInstance(self::ALARMPROTOCOL_MODULE_GUID);
         if (is_int($id)) {
             IPS_SetName($id, 'Alarmprotokoll');
-            echo 'Instanz mit der ID ' . $id . ' wurde erfolgreich erstellt!';
+            $infoText = 'Instanz mit der ID ' . $id . ' wurde erfolgreich erstellt!';
         } else {
-            echo 'Instanz konnte nicht erstellt werden!';
+            $infoText = 'Instanz konnte nicht erstellt werden!';
         }
+        $this->UpdateFormField('InfoMessage', 'visible', true);
+        $this->UpdateFormField('InfoMessageLabel', 'caption', $infoText);
+    }
+
+    public function UIShowMessage(string $Message): void
+    {
+        $this->UpdateFormField('InfoMessage', 'visible', true);
+        $this->UpdateFormField('InfoMessageLabel', 'caption', $Message);
     }
 
     #################### Request Action
